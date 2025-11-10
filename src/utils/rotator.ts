@@ -1,9 +1,9 @@
 import axios from "axios";
 import type {
+	KeyRotationConfig,
 	LavalinkConfig,
 	LavalinkServerConfig,
 	SpotifyKeySet,
-	KeyRotationConfig,
 } from "#kiyomi/types";
 import { logs } from "#kiyomi/utils";
 

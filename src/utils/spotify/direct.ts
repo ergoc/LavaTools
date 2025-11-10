@@ -1,7 +1,3 @@
-// WARNING!
-// This code atm not works properly due to the repository it fetches the secrets from
-// has been removed. Please do not use this method until the issue is resolved.
-
 import axios from "axios";
 import { TOTP } from "totp-generator";
 import type { SpotifyToken } from "#kiyomi/types";
@@ -57,7 +53,7 @@ export async function generateTokenUrl(
 	fetchResponse = false,
 ): Promise<string | SpotifyToken | null> {
 	const secret = await axios.get(
-		"https://raw.githubusercontent.com/Thereallo1026/spotify-secrets/refs/heads/main/secrets/secretDict.json",
+		"https://raw.githubusercontent.com/idMJA/secretify/refs/heads/master/secrets/secretDict.json",
 		cookieHeader ? { headers: { Cookie: cookieHeader } } : undefined,
 	);
 	const secretsMap = secret.data;

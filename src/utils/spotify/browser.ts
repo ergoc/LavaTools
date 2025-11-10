@@ -1,14 +1,14 @@
-import playwright from "playwright";
 import type {
 	Browser,
-	LaunchOptions,
 	BrowserContext,
-	Response,
+	LaunchOptions,
 	Page,
+	Response,
 } from "playwright";
-import type { SpotifyToken } from "#kiyomi/types";
-import { Semaphore, logs } from "#kiyomi/utils";
+import playwright from "playwright";
 import { Configuration } from "#kiyomi/config";
+import type { SpotifyToken } from "#kiyomi/types";
+import { logs, Semaphore } from "#kiyomi/utils";
 
 export class SpotifyTokenHandler {
 	private semaphore = new Semaphore();
@@ -25,7 +25,10 @@ export class SpotifyTokenHandler {
 		const initStart = Date.now();
 		const bootstrap = async (attempt = 1): Promise<void> => {
 			try {
-				logs("info", `Attempting to fetch initial Spotify token (attempt ${attempt})...`);
+				logs(
+					"info",
+					`Attempting to fetch initial Spotify token (attempt ${attempt})...`,
+				);
 				await this.getAccessToken();
 				logs(
 					"info",
@@ -41,7 +44,10 @@ export class SpotifyTokenHandler {
 					logs("info", `Retrying in ${2000 * attempt}ms...`);
 					setTimeout(() => void bootstrap(attempt + 1), 2000 * attempt);
 				} else {
-					logs("error", "Failed to fetch initial Spotify token after 3 attempts");
+					logs(
+						"error",
+						"Failed to fetch initial Spotify token after 3 attempts",
+					);
 				}
 			}
 		};
@@ -186,7 +192,7 @@ export class SpotifyTokenHandler {
 				logs("info", "Attempting to launch Chromium browser...");
 				this.browser = await playwright.chromium.launch(launchOptions);
 				logs("info", "Browser launched successfully");
-				
+
 				logs("info", "Creating browser context...");
 				this.context = await this.browser.newContext({
 					userAgent:
@@ -205,8 +211,14 @@ export class SpotifyTokenHandler {
 				this.context = undefined;
 				this.page = undefined;
 				logs("error", "Failed to launch browser or context", err);
-				logs("error", `Error details: ${err instanceof Error ? err.message : String(err)}`);
-				logs("error", `Error stack: ${err instanceof Error ? err.stack : 'No stack trace'}`);
+				logs(
+					"error",
+					`Error details: ${err instanceof Error ? err.message : String(err)}`,
+				);
+				logs(
+					"error",
+					`Error stack: ${err instanceof Error ? err.stack : "No stack trace"}`,
+				);
 				throw err;
 			}
 		} else {

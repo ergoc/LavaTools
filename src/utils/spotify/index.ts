@@ -1,10 +1,10 @@
 import playwright from "playwright";
 import type {
-	SpotifyToken,
 	KiyomiConfiguration,
 	SpotifyClient,
+	SpotifyToken,
 } from "#kiyomi/types";
-import { SpotifyTokenHandler, generateTokenUrl, logs } from "#kiyomi/utils";
+import { generateTokenUrl, logs, SpotifyTokenHandler } from "#kiyomi/utils";
 
 class DirectSpotifyClient implements SpotifyClient {
 	async handleTokenRequest(
@@ -61,9 +61,18 @@ async function checkBrowserAvailability(
 		return true;
 	} catch (error) {
 		logs("error", "Browser availability check failed:", error);
-		logs("error", `Error details: ${error instanceof Error ? error.message : String(error)}`);
-		if (error instanceof Error && error.message.includes("Executable doesn't exist")) {
-			logs("error", "Chromium browser is not installed. Run: bunx playwright install chromium");
+		logs(
+			"error",
+			`Error details: ${error instanceof Error ? error.message : String(error)}`,
+		);
+		if (
+			error instanceof Error &&
+			error.message.includes("Executable doesn't exist")
+		) {
+			logs(
+				"error",
+				"Chromium browser is not installed. Run: bunx playwright install chromium",
+			);
 		}
 		return false;
 	}
@@ -96,10 +105,10 @@ export async function createSpotifyClient(
 	}
 
 	if (method === "api") {
-		logs(
-			"warn",
-			"API method - WARNING: Not working properly due to removed repository dependency. Please use browser method instead.",
-		);
+		// logs(
+		// 	"warn",
+		// 	"API method - WARNING: Not working properly due to removed repository dependency. Please use browser method instead.",
+		// );
 		logs("info", "Using direct API Spotify token fetching");
 		return new DirectSpotifyClient();
 	}

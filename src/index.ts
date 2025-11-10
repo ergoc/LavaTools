@@ -1,11 +1,11 @@
-import {
-	logs,
-	initializeSpotifyClient,
-	initializeKeyRotator,
-	shutdownKeyRotator,
-} from "#kiyomi/utils";
 import { Configuration, KeyRotationConfiguration } from "#kiyomi/config";
 import type { SpotifyClient } from "#kiyomi/types";
+import {
+	initializeKeyRotator,
+	initializeSpotifyClient,
+	logs,
+	shutdownKeyRotator,
+} from "#kiyomi/utils";
 import { startServer } from "./server";
 
 let spotifyClient: SpotifyClient | null = null;

@@ -1,5 +1,5 @@
-import { getSolvers } from "#kiyomi/utils";
 import type { SignatureRequest, SignatureResponse } from "#kiyomi/types";
+import { getSolvers } from "#kiyomi/utils";
 
 export async function decryptSignature(
 	request: SignatureRequest,

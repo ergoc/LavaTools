@@ -1,11 +1,11 @@
 import axios from "axios";
-import { preprocessPlayer, getFromPrepared } from "#kiyomi/ejs/solvers";
+import { getFromPrepared, preprocessPlayer } from "#kiyomi/ejs/solvers";
 import type { Solvers } from "#kiyomi/types";
 import {
+	inFlightCache,
 	playerCache,
 	preprocessedCache,
 	solverCache,
-	inFlightCache,
 } from "#kiyomi/utils";
 
 async function fetchPlayerFile(playerUrl: string): Promise<string> {

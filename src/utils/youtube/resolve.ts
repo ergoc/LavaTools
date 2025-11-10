@@ -1,5 +1,5 @@
-import { getSolvers } from "#kiyomi/utils";
 import type { ResolveUrlRequest, ResolveUrlResponse } from "#kiyomi/types";
+import { getSolvers } from "#kiyomi/utils";
 
 export async function resolveUrl(
 	request: ResolveUrlRequest,
