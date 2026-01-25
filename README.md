@@ -27,9 +27,12 @@
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/idMJA/LavaTools.git
+# Clone the repository with submodules
+git clone --recurse-submodules https://github.com/idMJA/LavaTools.git
 cd LavaTools
+
+# If you already cloned without submodules, initialize them:
+# git submodule update --init --recursive
 
 # Install dependencies
 bun install
