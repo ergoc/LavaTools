@@ -9,7 +9,8 @@
   "scripts": {
     "start": "bun run src/index.ts",
     "dev": "bun run --watch src/index.ts",
-    "format": "biome check --write ./src && biome format --write ./src"
+    "format": "biome check --write ./src && biome format --write ./src",
+    "sub:update": "git submodule update --init --remote --recursive"
   },
   "lint-staged": {
     "*.ts": [
