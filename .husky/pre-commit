@@ -1,1 +1,1 @@
-bun sub:update && bun lint-staged
+bun lint-staged
