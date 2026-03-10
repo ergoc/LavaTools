@@ -25,7 +25,7 @@ export async function resolveUrl(
 			throw new Error("No signature solver found for this player");
 		}
 		const decryptedSig = solvers.sig(encrypted_signature);
-		const sigKey = signature_key || "sig";
+		const sigKey = signature_key || url.searchParams.get("sp") || "sig";
 		url.searchParams.set(sigKey, decryptedSig);
 		url.searchParams.delete("s");
 	}
@@ -35,10 +35,7 @@ export async function resolveUrl(
 		nParam = url.searchParams.get("n");
 	}
 
-	if (solvers.n) {
-		if (!nParam) {
-			throw new Error("n_param not found in request or stream_url");
-		}
+	if (solvers.n && nParam) {
 		const decryptedN = solvers.n(nParam);
 		url.searchParams.set("n", decryptedN);
 	}

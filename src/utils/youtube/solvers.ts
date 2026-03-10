@@ -2,53 +2,67 @@ import axios from "axios";
 import { getFromPrepared, preprocessPlayer } from "#kiyomi/ejs/solvers";
 import type { Solvers } from "#kiyomi/types";
 import {
+	getPlayerScript,
 	inFlightCache,
 	playerCache,
 	preprocessedCache,
 	solverCache,
 } from "#kiyomi/utils";
 
-async function fetchPlayerFile(playerUrl: string): Promise<string> {
-	const cached = playerCache.get(playerUrl);
+function normalizePlayerUrl(playerUrl: string): string {
+	try {
+		return getPlayerScript(playerUrl).toUrl();
+	} catch {
+		if (playerUrl.startsWith("http")) {
+			return playerUrl;
+		}
+		return `https://www.youtube.com${playerUrl}`;
+	}
+}
+
+export async function fetchPlayerFile(playerUrl: string): Promise<string> {
+	const normalizedPlayerUrl = normalizePlayerUrl(playerUrl);
+
+	const cached = playerCache.get(normalizedPlayerUrl);
 	if (cached !== undefined) {
 		return cached;
 	}
 
-	const inFlight = inFlightCache.get(playerUrl);
+	const inFlight = inFlightCache.get(normalizedPlayerUrl);
 	if (inFlight) {
 		return inFlight;
 	}
 
 	const fetchPromise = (async () => {
 		try {
-			const fullUrl = playerUrl.startsWith("http")
-				? playerUrl
-				: `https://www.youtube.com${playerUrl}`;
-
-			const response = await axios.get(fullUrl, { responseType: "text" });
+			const response = await axios.get(normalizedPlayerUrl, {
+				responseType: "text",
+			});
 			const playerContent = response.data;
-			playerCache.set(playerUrl, playerContent);
+			playerCache.set(normalizedPlayerUrl, playerContent);
 			return playerContent;
 		} catch (error) {
 			throw new Error(
 				`Error fetching player file: ${error instanceof Error ? error.message : String(error)}`,
 			);
 		} finally {
-			inFlightCache.delete(playerUrl);
+			inFlightCache.delete(normalizedPlayerUrl);
 		}
 	})();
 
-	inFlightCache.set(playerUrl, fetchPromise);
+	inFlightCache.set(normalizedPlayerUrl, fetchPromise);
 	return fetchPromise;
 }
 
 export async function getSolvers(player_url: string): Promise<Solvers | null> {
-	const cachedSolvers = solverCache.get(player_url);
+	const cacheKey = normalizePlayerUrl(player_url);
+
+	const cachedSolvers = solverCache.get(cacheKey);
 	if (cachedSolvers) {
 		return cachedSolvers;
 	}
 
-	let preprocessedPlayer = preprocessedCache.get(player_url);
+	let preprocessedPlayer = preprocessedCache.get(cacheKey);
 	if (!preprocessedPlayer) {
 		const rawPlayer = await fetchPlayerFile(player_url);
 		try {
@@ -57,12 +71,12 @@ export async function getSolvers(player_url: string): Promise<Solvers | null> {
 			const message = e instanceof Error ? e.message : String(e);
 			throw new Error(`Failed to preprocess player: ${message}`);
 		}
-		preprocessedCache.set(player_url, preprocessedPlayer);
+		preprocessedCache.set(cacheKey, preprocessedPlayer);
 	}
 
 	const solvers = getFromPrepared(preprocessedPlayer);
 	if (solvers) {
-		solverCache.set(player_url, solvers);
+		solverCache.set(cacheKey, solvers);
 		return solvers;
 	}
 

@@ -1,6 +1,6 @@
 export interface SignatureRequest {
-	encrypted_signature: string;
-	n_param: string;
+	encrypted_signature?: string;
+	n_param?: string;
 	player_url: string;
 }
 

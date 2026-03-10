@@ -8,6 +8,7 @@ export * from "./spotify";
 export * from "./spotify/browser";
 export * from "./spotify/direct";
 export * from "./youtube/decrypt";
+export * from "./youtube/player";
 export * from "./youtube/resolve";
 export * from "./youtube/solvers";
 export * from "./youtube/sts";

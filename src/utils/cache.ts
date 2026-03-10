@@ -32,6 +32,14 @@ export const inFlightCache = new LRUCache<string, Promise<string>>({
 	updateAgeOnGet: false,
 });
 
+export const stsCache = new LRUCache<string, string>({
+	max: 150,
+	ttl: 1000 * 60 * 60 * 24,
+	allowStale: false,
+	updateAgeOnGet: true,
+	updateAgeOnHas: false,
+});
+
 export function getCacheStats() {
 	return {
 		playerCache: {
@@ -53,6 +61,11 @@ export function getCacheStats() {
 			size: inFlightCache.size,
 			max: inFlightCache.max,
 		},
+		stsCache: {
+			size: stsCache.size,
+			max: stsCache.max,
+			calculatedSize: stsCache.calculatedSize,
+		},
 	};
 }
 
@@ -61,4 +74,5 @@ export function clearAllCaches() {
 	preprocessedCache.clear();
 	solverCache.clear();
 	inFlightCache.clear();
+	stsCache.clear();
 }
